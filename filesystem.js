@@ -1,6 +1,6 @@
-const fs = require("fs"); //文件操作
-// 增删改查；
-// 1.文件操作  2.目录操作；
+// 1.文件操作  2.目录操作
+
+const fs = require("fs");
 
 // 文件操作
 fs.writeFile("1.txt", "我是写入的文字", function (err) {
