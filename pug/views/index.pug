@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+html(lang="en")
+    head
+        meta(charset="UTF-8")
+        meta(name="viewport" content="width=device-width, initial-scale=1.0")
+        meta(http-equiv="X-UA-Compatible" content="ie=edge")
+        title Document
+        style.
+            .box1 {
+                width: 200px;
+                height: 100px;
+                background: red;
+            }
+            .box2 {
+                width: 200px;
+                height: 100px;
+                background: green;
+            }
+    body
+        h1 我是标题
+        div(class="box1") 我是类名为box1的div
+        .box2 我是类名为box2的div
+        #box3(style={width:"200px",height:"100px",background:"yellow"}) 我是id为box3的div
+        //- 我是pug注释
+        // 我是html注释
+        div
+            | hello
+        - let str = "你好"
+        p #{str}
+        p #{data}
+        ul
+            each item,index in users
+                li 姓名：#{item.name} 年龄：#{item.age} 索引：#{index}
+        - for(let item of users)
+            div 我是循环出来的数据 #{item.name}
+        mixin mdiv
+            div 我是非常常用的div
+        +mdiv
+        +mdiv
+        mixin pet(type, gender)
+            div 这是一只 #{type}, 性别是 #{gender}
+        +pet('狗', '公的')
+        +pet('猫', '母的')
+        include common.pug
+
+        script.
+            console.log('我是script');

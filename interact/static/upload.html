@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <input type="file" class="myfile" />
+    进度：<progress value="0" max="100"></progress> <span class="percent">0%</span>
+    速度：<span class="speed">20b/s</span>
+    <button>点击上传</button>
+    <button>取消上传</button>
+
+    <script>
+        const xhr = new XMLHttpRequest();
+        const btns = document.querySelectorAll("button");
+        let startTime;
+        let sloaded;
+
+        btns[0].onclick = function () {
+            const file = document.querySelector(".myfile").files[0]; // 获取上传的文件
+            const form = new FormData();
+
+            form.append("myfile", file); // 将文件添加到表单
+
+            xhr.open("post", "/fileUpload", true);
+
+            xhr.onload = function () {
+                console.log(xhr.responseText);
+            }
+
+            xhr.upload.onloadstart = function () { // 开始上传事件
+                console.log("开始上传");
+                startTime = +new Date(); // 初始时间
+                sloaded = 0; // 初始上传大小
+            }
+
+            xhr.upload.onprogress = function (evt) { // 正在上传事件，上传过程中会不断调用
+                let endTime = +new Date();
+                let dTime = (endTime - startTime) / 1000; // 时间差，转换成秒
+                let dloaded = evt.loaded - sloaded; // evt.loaded 表示当前已经上传的大小
+                let speed = dloaded / dTime; // 第一次计算速度
+                let unit = "b/s";
+                startTime = +new Date(); // 更新初始时间
+                sloaded = evt.loaded; // 更新初始上传大小
+                if (speed / 1024 > 1) { // 如果速度大于 1024，则将速度转换为 kb/s
+                    unit = "kb/s";
+                    speed = speed / 1024;
+                }
+                if (speed / 1024 > 1) { // 如果速度依然大于 104，则将速度转换为 mb/s
+                    unit = "mb/s";
+                    speed = speed / 1024;
+                }
+                document.querySelector(".speed").innerHTML = speed.toFixed(2) + unit; // 设置速度
+
+                let percent = (evt.loaded / evt.total * 100).toFixed(0); // 获取进度
+                document.querySelector("progress").value = percent; // 设置进度
+                document.querySelector(".percent").innerHTML = percent + "%"; // 设置进度百分比
+            }
+
+            xhr.upload.onload = function () { // 上传成功事件
+                console.log("上传成功");
+            }
+
+            xhr.upload.onloadend = function () { // 上传结束事件
+                console.log("上传完成");
+            }
+
+            xhr.upload.onabort = function () { // 上传中止事件
+                console.log("取消上传");
+            }
+
+            xhr.send(form); // 发送请求
+        }
+
+        btns[1].onclick = function () {
+            xhr.abort(); // 取消请求
+        }
+    </script>
+
+</body>
+
+</html>
