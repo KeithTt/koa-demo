@@ -1,4 +1,4 @@
-// koa  express 是nodejs的框架；轻量级；
+// koa express 是nodejs的框架; 轻量级
 
 const Koa = require("koa");
 const app = new Koa();

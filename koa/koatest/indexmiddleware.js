@@ -1,7 +1,7 @@
 const Koa = require("koa");
 let app = new Koa();
 
-// ctx:context简写；（res和req）；
+// ctx: context简写（包含res和req）
 let m1 = function (ctx, next) {
     console.log("m1start");
     // throw new Error("some error...");
@@ -17,25 +17,17 @@ let m2 = function (ctx, next) {
 
 app.use(m1);
 app.use(m2);
+
 app.use(async ctx => {
-    //1. 异步处理： async await；
-    //    let res = await new Promise(resolve=>{
-    //         setTimeout(() => {
-    //             resolve("结果");
-    //         }, 1000);
-    //     })
-    //     console.log(res)
-    // console.log(ctx.req.url);
-    // 2. 获取get查询参数；ctx.request.query
-    // console.log(ctx.request.query.age);
-    // ctx.res  ==== res; ctx.req=== req;
+    // 获取get查询参数；ctx.request.query
+    console.log(ctx.request.query.age);
     // ctx.response  koa封装的res ctx.request koa封装的req
     // 3.别名；ctx.body(别名) 完整写法；ctx.response.body;
     // 4.中间件执行顺序；
-    ctx.response.body = "hello world 你好";
+    ctx.response.body = "hello world";
 })
 
-// 错误处理中间件；
+// 错误处理中间件
 app.on("error", err => {
     console.log("??", err);
 })
