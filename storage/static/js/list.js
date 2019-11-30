@@ -1,5 +1,5 @@
 window.onload = function () {
-  //控制添加按钮显示或者隐藏；
+  //控制添加按钮显示或者隐藏
   let uls = document.querySelectorAll(".listContainer");
   let spans = document.querySelectorAll(".btnController");
   uls.forEach((v, k) => {
@@ -76,7 +76,7 @@ function getCookie(name) {
 function showDetail(musicData) {
   // console.log(musicData);
   if (localStorage.getItem("musicData")) {
-    //除重
+    // 去重
     let localData = JSON.parse(localStorage.getItem("musicData"));
     if (!localData.find(v => v.id == musicData.id)) {
       localData.push(musicData);
@@ -85,7 +85,7 @@ function showDetail(musicData) {
   } else {
     localStorage.setItem("musicData", JSON.stringify([musicData]));
   }
-  //储存音乐信息；
+  // 储存音乐信息
   if (!localStorage.getItem("isOpen")) {
     window.open("/detail");
   }
