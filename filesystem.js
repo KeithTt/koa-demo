@@ -1,6 +1,7 @@
 // 1.文件操作  2.目录操作
 
 const fs = require("fs");
+const path = require("path");
 
 // 文件操作
 fs.writeFile("1.txt", "我是写入的文字", function (err) {
@@ -10,7 +11,7 @@ fs.writeFile("1.txt", "我是写入的文字", function (err) {
     console.log("写入成功");
 })
 
-// a:追加写入；w 写入；r：读取；
+// a:追加写 w:写入 r:读取
 fs.writeFile("1.txt", "我是追加的文字", { flag: "a" }, function (err) {
     if (err) {
         return console.log(err);
@@ -52,7 +53,7 @@ fs.unlink("2.txt", (err) => {
     console.log("删除成功");
 })
 
-// 复制； 先读取 再写入 的过程
+// 复制；先读取 再写入
 fs.copyFile("index.html", "myindex.html", err => {
     if (err) {
         return console.log(err);
@@ -84,7 +85,7 @@ fs.rename("11", "22", err => {
     console.log("修改成功");
 })
 
-// 读取目录；
+// 读取目录
 fs.readdir("22", (err, data) => {
     if (err) {
         return console.log(err);
@@ -119,20 +120,21 @@ fs.stat("index.html", (err, stat) => {
 })
 
 // 删除非空文件夹
-// 先把目录里的文件删除-->删除空目录；
-function removeDir(path) {
-    let data = fs.readdirSync(path);
-    // ["33","1.txt","2.html"];
-    for (let i = 0; i < data.length; i++) {
-        let url = path + "/" + data[i];
-        let stat = fs.statSync(url);
-        if (stat.isDirectory()) {
-            removeDir(url); // 如果是目录，则递归删除
-        } else {
-            fs.unlinkSync(url); // 如果是文件，则直接删除文件
+// 先把目录里的文件删除, 再删除空目录
+function removeDir(dirPath) {
+    if (fs.existsSync(dirPath)) {
+        let files = fs.readdirSync(dirPath);  // 读取文件夹中的文件
+        for (let i = 0; i < files.length; i++) {
+            const f = path.resolve(dirPath, files[i]);
+            if (fs.statSync(f).isDirectory()) {
+                removeDir(f); // 如果是目录，则递归删除
+            } else {
+                fs.unlinkSync(f); // 如果是文件，则直接删除文件
+            }
         }
+
+        fs.rmdirSync(dirPath);  // 删除空目录
+    } else {
+        console.log('该文件夹不存在: ' + dirPath);
     }
-    // 删除空目录
-    fs.rmdirSync(path);
 }
-removeDir("22");
